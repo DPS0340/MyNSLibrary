@@ -6,7 +6,7 @@
   <script>
     window.onload = function() {\
     let req = new XMLHttpRequest();
-    let window = document.getElementById("frame").contentWindow;
+    let windows = document.getElementById("frame").contentWindow;
     let person = document.getElementById("message");
     let book = document.getElementById("message");
     let lending = document.getElementById("button");
@@ -40,6 +40,6 @@
      <input type="button" value="반납" id="returning">
      <input type="button" value="연장" id="renewing">
   </p>
-  <iframe src=".html" id="frame" width="300px" height="200px"></iframe>
+  <iframe src=".html" id="windows" width="300px" height="200px"></iframe>
 </body>
 </html>
