@@ -9,9 +9,9 @@
     let window = document.getElementById("frame").contentWindow;
     let person = document.getElementById("message");
     let book = document.getElementById("message");
-    let lend = document.getElementById("button");
-    let return = document.getElementById("button");
-    let renew = document.getdocumentById("button");
+    let lending = document.getElementById("button");
+    let returning = document.getElementById("button");
+    let renewing = document.getdocumentById("button");
     
       button.addEventListener("click", function() {
         frameWindow.postmessage(message.value, targetOrigin);
@@ -36,9 +36,9 @@
      <input type="text" id="person" size="30">
    </p><p>
      <input type="text" id="book" size="30">
-     <input type="button" value="대출" id="lend">
-     <input type="button" value="반납" id="return">
-     <input type="button" value="연장" id="renew">
+     <input type="button" value="대출" id="lending">
+     <input type="button" value="반납" id="returning">
+     <input type="button" value="연장" id="renewing">
   </p>
   <iframe src=".html" id="frame" width="300px" height="200px"></iframe>
 </body>
