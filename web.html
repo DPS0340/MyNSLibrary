@@ -25,6 +25,7 @@
         jsonObj = JSON.parse(req.responseText);
         console.log(jsonObj);
       }, false);
+      req.responseType = "json";
       req.open("GET", "data.json", true);
       req.send(null);
       
