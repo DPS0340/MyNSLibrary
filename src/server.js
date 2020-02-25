@@ -77,7 +77,7 @@ app.get('/renew', (req, res) => {
 app.get('/save', (req, res) => {
     console.log(outPath);
     savexlsx();
-    res.sendFile(outPath);
+    res.download(outPath, req.query["filename"]);
 });
 
 app.listen(port || 80);
