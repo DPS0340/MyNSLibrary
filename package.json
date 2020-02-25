@@ -1,0 +1,27 @@
+{
+  "name": "mynslibrary",
+  "version": "1.0.0",
+  "description": "**부산내성중학교** 도서관을 두고 개발하는 거지만 다른 학교에서 쓰신다면 부산내성중학교 또는 제 이메일로 문의 바랍니다.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DPS0340/MyNSLibrary.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DPS0340/MyNSLibrary/issues"
+  },
+  "homepage": "https://github.com/DPS0340/MyNSLibrary#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.1.6",
+    "json2xls": "^0.1.2",
+    "xlsx": "^0.15.5"
+  }
+}

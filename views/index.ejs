@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>부산내성중학교 도서관 전자시스템</title>
+</head>
+
+<body>
+    <%
+    function isEmpty(obj) {
+        for (let property in obj) {
+            if (obj.hasOwnProperty(property)) {
+                return false;
+            }
+        }
+
+        return JSON.stringify(obj) === JSON.stringify({});
+    }
+    %>
+        <% if(!isEmpty(data)){ %>
+            <% if(line){ %>
+                <p style="font-size: 18px;">
+                    <% line %>
+                        <p>
+                            <% }  %>
+                                <form action="/" method="get" id="getForm">
+                                    <p>
+                                        대출자 : <input type="text" id="person" name="person" size="30">
+                                    </p>
+                                    <p>
+                                        책 번호 : <input type="text" id="book" name="book" size="30">
+                                    </p>
+                                    <p>
+                                        책 번호로 입력하세요! 책 제목으로 검색하면 안 나옵니다.
+                                    </p>
+                                    <p>
+                                        <button id="lend">대출</button>
+                                        <button id="return">반납</button>
+                                        <button id="renew">연장</button>
+                                    </p>
+                                </form>
+                                <% } else { %>
+                                    <form action="/upload" method="post" enctype="multipart/form-data">
+                                        <input type="file" name="file">
+                                        <button type="submit">Submit</button>
+                                    </form>
+                                    <% } %>
+                                        <script>
+                                            const form = document.getElementById("getForm");
+                                            document.getElementById("lend")
+                                                .addEventListener("click", () => {
+                                                    form.action = "/lend";
+                                                    form.submit();
+                                                });
+                                            document.getElementById("return")
+                                                .addEventListener("click", () => {
+                                                    form.action = "/return";
+                                                    form.submit();
+                                                });
+                                            document.getElementById("renew")
+                                                .addEventListener("click", () => {
+                                                    form.action = "/renew";
+                                                    form.submit();
+                                                });
+                                        </script>
+</body>
+
+</html>
