@@ -5,6 +5,14 @@
     padding-bottom: 5%;
 }
 
+.display {
+    min-height: 300px;
+    border: 1px solid gray;
+    text-align: center;
+    padding-top: 5%;
+    padding-bottom: 5%;
+}
+
 #lineSpan {
     font-size: 20px;
 }
@@ -12,4 +20,8 @@
 #save {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+#displaySpan {
+    font-size: 18px;
 }

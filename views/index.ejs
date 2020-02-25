@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>부산내성중학교 도서관 전자시스템</title>
     <link rel="stylesheet" type="text/css" href="index.css" />
+    <script lang="javascript" src="dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
@@ -14,14 +15,9 @@
                 <%= line %>
             </span>
         </div>
-        <div>
-            <% for (const sheet in data.Sheets) {
-                const original = data.Sheets[sheet];
-                const filtered = Object.entries(original)
-                    .filter(([key, val]) => typeof(val) === "object" && key.includes("1"))
-                    .map(([key, val]) => val.v);
-                console.log(filtered);
-            } %>
+        <div class="display">
+            <span id="displaySpan">
+            </span>
         </div>
         <form action="/" method="get" id="getForm">
             <label for="person">대출자 : </label>
@@ -32,6 +28,9 @@
         <p>
             책 번호로 입력하세요! 책 제목으로 검색하면 안 나옵니다.
         </p>
+        <div>
+            <button id="search">검색</button>
+        </div>
         <div>
             <button id="lend">대출</button>
             <button id="return">반납</button>
@@ -45,6 +44,80 @@
                 <button type="submit" id="reset">리셋</button>
             </form>
         </div>
+        <script>
+            const data = <%- JSON.stringify(data) %>;
+            const sheets = data.Sheets;
+
+            const form = document.getElementById("getForm");
+            document.getElementById("lend")
+                .addEventListener("click", () => {
+                    form.action = "/lend";
+                    form.submit();
+                });
+            document.getElementById("return")
+                .addEventListener("click", () => {
+                    form.action = "/return";
+                    form.submit();
+                });
+            document.getElementById("renew")
+                .addEventListener("click", () => {
+                    form.action = "/renew";
+                    form.submit();
+                });
+            document.getElementById("search")
+                .addEventListener("click", () => {
+                    search();
+                });
+            document.getElementById("person")
+                .addEventListener("keyup", function(event) {
+                    if (event.keyCode === 13) {
+                        search();
+                    }
+                });
+            document.getElementById("book")
+                .addEventListener("keyup", function(event) {
+                    if (event.keyCode === 13) {
+                        search();
+                    }
+                });
+
+            function findByRow(person, book) {
+                for (const sheetname in sheets) {
+                    const sheet = sheets[sheetname];
+                    console.log(sheet);
+                    const range = XLSX.utils.decode_range(sheet['!ref']);
+                    for (let rowNum = range.s.r; rowNum <= range.e.r; rowNum++) {
+                        const row = [];
+                        for (colNum = range.s.c; colNum <= range.e.c; colNum++) {
+                            const nextCell = sheet[
+                                XLSX.utils.encode_cell({
+                                    r: rowNum,
+                                    c: colNum
+                                })
+                            ];
+                            if (typeof nextCell === 'undefined') {
+                                row.push(void 0);
+                            } else row.push(nextCell.w);
+                        }
+                        console.log(row);
+                        console.log(row.includes(person) || row.includes(book));
+                        if (row.includes(person) || row.includes(book)) {
+                            return row;
+                        }
+                    }
+                }
+                return null;
+            };
+
+            function search() {
+                const person = document.getElementById("person").value;
+                const book = document.getElementById("book").value;
+                const result = findByRow(person, book) || [];
+                console.log(result);
+                document.getElementById("displaySpan")
+                    .innerText = result.length > 0 ? result.join(": ") : "검색결과 없음!";
+            }
+        </script>
         <% } else { %>
             <div class="panel">
                 <span>
@@ -56,24 +129,6 @@
                 <button type="submit">Submit</button>
             </form>
             <% } %>
-                <script>
-                    const form = document.getElementById("getForm");
-                    document.getElementById("lend")
-                        .addEventListener("click", () => {
-                            form.action = "/lend";
-                            form.submit();
-                        });
-                    document.getElementById("return")
-                        .addEventListener("click", () => {
-                            form.action = "/return";
-                            form.submit();
-                        });
-                    document.getElementById("renew")
-                        .addEventListener("click", () => {
-                            form.action = "/renew";
-                            form.submit();
-                        });
-                </script>
 </body>
 
 </html>
