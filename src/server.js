@@ -42,8 +42,8 @@ app.post('/upload', (req, res) => {
 app.get('/reset', (req, res) => {
     try {
         removexlsx();
-    } catch {
-        null;
+    } catch (e) {
+        console.error(e);
     }
     res.redirect("/");
 });
@@ -96,4 +96,5 @@ function savexlsx() {
 
 function removexlsx() {
     fs.unlinkSync(outPath);
+    data = null;
 }
