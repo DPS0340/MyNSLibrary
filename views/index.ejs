@@ -4,66 +4,68 @@
 <head>
     <meta charset="UTF-8">
     <title>부산내성중학교 도서관 전자시스템</title>
+    <link rel="stylesheet" type="text/css" href="index.css" />
 </head>
 
 <body>
-    <%
-    function isEmpty(obj) {
-        for (let property in obj) {
-            if (obj.hasOwnProperty(property)) {
-                return false;
-            }
-        }
-
-        return JSON.stringify(obj) === JSON.stringify({});
-    }
-    %>
-        <% if(!isEmpty(data)){ %>
-            <% if(line){ %>
-                <p style="font-size: 18px;">
-                    <% line %>
-                        <p>
-                            <% }  %>
-                                <form action="/" method="get" id="getForm">
-                                    <p>
-                                        대출자 : <input type="text" id="person" name="person" size="30">
-                                    </p>
-                                    <p>
-                                        책 번호 : <input type="text" id="book" name="book" size="30">
-                                    </p>
-                                    <p>
-                                        책 번호로 입력하세요! 책 제목으로 검색하면 안 나옵니다.
-                                    </p>
-                                    <p>
-                                        <button id="lend">대출</button>
-                                        <button id="return">반납</button>
-                                        <button id="renew">연장</button>
-                                    </p>
-                                </form>
-                                <% } else { %>
-                                    <form action="/upload" method="post" enctype="multipart/form-data">
-                                        <input type="file" name="file">
-                                        <button type="submit">Submit</button>
-                                    </form>
-                                    <% } %>
-                                        <script>
-                                            const form = document.getElementById("getForm");
-                                            document.getElementById("lend")
-                                                .addEventListener("click", () => {
-                                                    form.action = "/lend";
-                                                    form.submit();
-                                                });
-                                            document.getElementById("return")
-                                                .addEventListener("click", () => {
-                                                    form.action = "/return";
-                                                    form.submit();
-                                                });
-                                            document.getElementById("renew")
-                                                .addEventListener("click", () => {
-                                                    form.action = "/renew";
-                                                    form.submit();
-                                                });
-                                        </script>
+    <% if (data != null) { %>
+        <div class="panel">
+            <span id="lineSpan">
+                <%= line %>
+            </span>
+        </div>
+        <form action="/" method="get" id="getForm">
+            <label for="person">대출자 : </label>
+            <input type="text" id="person" name="person" size="30"><br>
+            <label for="book">책 번호 : </label>
+            <input type="text" id="book" name="book" size="30"><br>
+            <button type="submit" id="hiddenSubmit"></button>
+        </form>
+        <p>
+            책 번호로 입력하세요! 책 제목으로 검색하면 안 나옵니다.
+        </p>
+        <div>
+            <button id="lend">대출</button>
+            <button id="return">반납</button>
+            <button id="renew">연장</button>
+        </div>
+        <div>
+            <form action="/save" method="get" style="margin-right: 45px; display: inline;">
+                <button type="submit" id="save">파일로 저장</button>
+            </form>
+            <form action="/reset" method="get" style="display: inline;">
+                <button type="submit" id="reset">리셋</button>
+            </form>
+        </div>
+        <% } else { %>
+            <div class="panel">
+                <span>
+                    xlsx 파일을 업로드 해주세요.
+                </span>
+            </div>
+            <form action="/upload" method="post" enctype="multipart/form-data" style="margin-top: 15px;">
+                <input type="file" name="file">
+                <button type="submit">Submit</button>
+            </form>
+            <% } %>
+                <script>
+                    const form = document.getElementById("getForm");
+                    document.getElementById("lend")
+                        .addEventListener("click", () => {
+                            form.action = "/lend";
+                            form.submit();
+                        });
+                    document.getElementById("return")
+                        .addEventListener("click", () => {
+                            form.action = "/return";
+                            form.submit();
+                        });
+                    document.getElementById("renew")
+                        .addEventListener("click", () => {
+                            form.action = "/renew";
+                            form.submit();
+                        });
+                </script>
 </body>
 
 </html>

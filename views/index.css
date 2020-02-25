@@ -1,0 +1,19 @@
+.panel {
+    border: 1px solid aqua;
+    text-align: center;
+    padding-top: 5%;
+    padding-bottom: 5%;
+}
+
+#lineSpan {
+    font-size: 18px;
+}
+
+#hiddenSubmit {
+    visibility: hidden;
+}
+
+#save {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

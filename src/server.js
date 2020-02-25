@@ -14,24 +14,27 @@ app.use(express.static(path.join(__dirname, '/..', 'views')));
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
-let data;
+const outPath = path.join(path.dirname(__dirname), "out.xlsx");
+let data = null;
 
 try {
-    data = JSON.parse(fs.readFileSync("../data.json")) || {};
+    if (fs.existsSync(outPath)) {
+        data = xlsx.readFile(outPath);
+    }
 } catch {
-    data = {};
+    data = null;
 }
 
 let line = "";
 
 
+
 function savexlsx() {
-    fs.writeFileSync("../data.json", JSON.stringify(data));
+    xlsx.writeFile(data, outPath);
 }
 
 function removexlsx() {
-    data = {};
-    savexlsx();
+    fs.unlinkSync(outPath);
 }
 
 
@@ -40,6 +43,7 @@ app.get('/', (req, res) => {
         "data": data,
         "line": line
     });
+    line = "";
 });
 
 app.post('/upload', (req, res) => {
@@ -52,21 +56,40 @@ app.post('/upload', (req, res) => {
 });
 
 app.get('/reset', (req, res) => {
-    removexlsx();
+    try {
+        removexlsx();
+    } catch {
+        null;
+    }
     res.redirect("/");
-})
+});
 
 app.get('/lend', (req, res) => {
+    // TODO
+    line = "대출 되었습니다.";
+    savexlsx();
     res.redirect("/");
-})
+});
 
 app.get('/return', (req, res) => {
+    // TODO
+    line = "반납 되었습니다.";
+    savexlsx();
     res.redirect("/");
-})
+});
 
 app.get('/renew', (req, res) => {
+    // TODO
+    line = "갱신 되었습니다.";
+    savexlsx();
     res.redirect("/");
-})
+});
+
+app.get('/save', (req, res) => {
+    console.log(outPath);
+    savexlsx();
+    res.sendFile(outPath);
+});
 
 app.listen(port || 80);
 
