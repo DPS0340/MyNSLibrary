@@ -15,27 +15,11 @@ app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
 const outPath = path.join(path.dirname(__dirname), "out.xlsx");
-let data = null;
 
-try {
-    if (fs.existsSync(outPath)) {
-        data = xlsx.readFile(outPath);
-    }
-} catch {
-    data = null;
-}
+let data = getData();
 
 let line = "";
 
-
-
-function savexlsx() {
-    xlsx.writeFile(data, outPath);
-}
-
-function removexlsx() {
-    fs.unlinkSync(outPath);
-}
 
 
 app.get('/', (req, res) => {
@@ -95,3 +79,18 @@ app.listen(port || 80);
 
 console.log(`listening at ${port}!`);
 console.log(`http://localhost`);
+
+function getData() {
+    if (fs.existsSync(outPath)) {
+        return xlsx.readFile(outPath);
+    }
+    return null;
+}
+
+function savexlsx() {
+    xlsx.writeFile(data, outPath);
+}
+
+function removexlsx() {
+    fs.unlinkSync(outPath);
+}
