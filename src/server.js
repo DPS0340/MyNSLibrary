@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+const open = require('open');
 const express = require("express");
 const bodyParser = require('body-parser');
 const fileupload = require("express-fileupload");
@@ -83,6 +84,10 @@ app.listen(port || 80);
 
 console.log(`listening at ${port}!`);
 console.log(`http://localhost`);
+
+(async() => {
+    await open(`http://localhost`);
+})();
 
 function getData() {
     if (fs.existsSync(outPath)) {
