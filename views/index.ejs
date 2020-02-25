@@ -14,6 +14,15 @@
                 <%= line %>
             </span>
         </div>
+        <div>
+            <% for (const sheet in data.Sheets) {
+                const original = data.Sheets[sheet];
+                const filtered = Object.entries(original)
+                    .filter(([key, val]) => typeof(val) === "object" && key.includes("1"))
+                    .map(([key, val]) => val.v);
+                console.log(filtered);
+            } %>
+        </div>
         <form action="/" method="get" id="getForm">
             <label for="person">대출자 : </label>
             <input type="text" id="person" name="person" size="30"><br>

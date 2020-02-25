@@ -27,6 +27,7 @@ app.get('/', (req, res) => {
         "data": data,
         "line": line
     });
+    // console.log(data);
     line = "";
 });
 
