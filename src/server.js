@@ -51,6 +51,7 @@ app.get('/reset', (req, res) => {
 app.get('/lend', (req, res) => {
     // TODO
     line = "대출 되었습니다.";
+    console.log(line);
     savexlsx();
     res.redirect("/");
 });
@@ -58,6 +59,7 @@ app.get('/lend', (req, res) => {
 app.get('/return', (req, res) => {
     // TODO
     line = "반납 되었습니다.";
+    console.log(line);
     savexlsx();
     res.redirect("/");
 });
@@ -65,6 +67,7 @@ app.get('/return', (req, res) => {
 app.get('/renew', (req, res) => {
     // TODO
     line = "갱신 되었습니다.";
+    console.log(line);
     savexlsx();
     res.redirect("/");
 });
