@@ -6,6 +6,7 @@
     <title>부산내성중학교 도서관 전자시스템</title>
     <link rel="stylesheet" type="text/css" href="dist/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="index.css" />
+    <script lang="javascript" src="dist/jquery-3.4.1.min.js"></script>
     <script lang="javascript" src="dist/bootstrap.min.js"></script>
     <script lang="javascript" src="dist/xlsx.full.min.js"></script>
 </head>
@@ -21,7 +22,7 @@
             <span id="displaySpan">
             </span>
         </div>
-        <form action="/" method="get" id="getForm">
+        <form class="form-group" action="/" method="get" id="getForm">
             <label for="person">대출자 : </label>
             <input type="text" id="person" name="person" size="30"><br>
             <label for="book">책 번호 : </label>
@@ -39,11 +40,11 @@
             <button class="btn btn-primary" id="renew">연장</button>
         </div>
         <div style="margin-bottom: 5%;">
-            <form action="/save" method="get" id="save" style="margin-right: 45px; display: inline;">
+            <form class="form-group" action="/save" method="get" id="save" style="margin-right: 45px; display: inline;">
                 <input type="text" placeholder="저장될 파일이름" id="filename" name="filename">
                 <button class="btn btn-primary" id="saveButton">파일로 저장</button>
             </form>
-            <form action="/reset" method="get" style="display: inline;">
+            <form class="form-group" action="/reset" method="get" style="display: inline;">
                 <button class="btn btn-primary" type="submit" id="reset">데이터 리셋</button>
             </form>
         </div>
@@ -91,13 +92,17 @@
                 });
 
             function findByRow(person, book) {
+                const result = [];
                 for (const sheetname in sheets) {
                     const sheet = sheets[sheetname];
                     console.log(sheet);
+                    if (sheet['!ref'] == undefined) {
+                        return null;
+                    }
                     const range = XLSX.utils.decode_range(sheet['!ref']);
                     for (let rowNum = range.s.r; rowNum <= range.e.r; rowNum++) {
                         const row = [];
-                        for (colNum = range.s.c; colNum <= range.e.c; colNum++) {
+                        for (let colNum = range.s.c; colNum <= range.e.c; colNum++) {
                             const nextCell = sheet[
                                 XLSX.utils.encode_cell({
                                     r: rowNum,
@@ -106,25 +111,57 @@
                             ];
                             if (typeof nextCell === 'undefined') {
                                 row.push(void 0);
-                            } else row.push(nextCell.w);
+                            } else row.push(nextCell.v);
                         }
                         console.log(row);
-                        console.log(row.includes(person) || row.includes(book));
-                        if (row.includes(person) || row.includes(book)) {
-                            return row;
+                        if (person && book) {
+                            if (row.includes(person) && row.includes(book)) {
+                                result.push(row);
+                            }
+                        } else if (person && !book) {
+                            if (row.includes(person)) {
+                                result.push(row);
+                            }
+                        } else if (!person && book) {
+                            if (row.includes(book)) {
+                                result.push(row);
+                            }
+                        } else {
+                            result.push(row);
                         }
                     }
+                    if (result.length === 0) {
+                        return null;
+                    }
+                    return result.flat(1).filter(e => e != undefined);
                 }
-                return null;
             };
 
             function search() {
                 const person = document.getElementById("person").value;
                 const book = document.getElementById("book").value;
                 const result = findByRow(person, book) || [];
+                let line = "";
+                if (result.length === 0) {
+                    line = "검색결과 없음!";
+                } else {
+                    let cnt = 0;
+                    for (elem of result) {
+                        cnt++;
+                        if (cnt % 3 === 1) {
+                            line += elem + ": ";
+                        }
+                        if (cnt % 3 === 2) {
+                            line += elem + "<br>";
+                        }
+                        if (cnt % 3 === 0) {
+                            line += new Date(elem).toLocaleDateString() + " 까지<br>";
+                        }
+                    }
+                }
                 console.log(result);
                 document.getElementById("displaySpan")
-                    .innerText = result.length > 0 ? result.join(": ") : "검색결과 없음!";
+                    .innerHTML = line;
             }
         </script>
         <% } else { %>
@@ -133,7 +170,7 @@
                     xlsx 파일을 업로드 해주세요.
                 </span>
             </div>
-            <form action="/upload" method="post" enctype="multipart/form-data" style="margin-top: 15px;">
+            <form class="form-group" action="/upload" method="post" enctype="multipart/form-data" style="margin-top: 15px;">
                 <input type="file" name="file">
                 <button class="btn btn-primary" type="submit">Submit</button>
             </form>

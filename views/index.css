@@ -11,6 +11,7 @@
     text-align: center;
     padding-top: 5%;
     padding-bottom: 5%;
+    overflow: scroll;
 }
 
 #lineSpan {
@@ -24,4 +25,5 @@
 
 #displaySpan {
     font-size: 18px;
+    overflow: visible;
 }
