@@ -50,6 +50,87 @@ app.get('/reset', (req, res) => {
     res.redirect("/");
 });
 
+
+app.get('/lend', (req, res) => {
+    console.log(req.query);
+    if (findByRow(req.query.person, req.query.book) != null) {
+        line = "중복되는 대출이 있습니다.";
+        console.log(line);
+        savexlsx();
+        res.redirect("/");
+        return;
+    }
+    appendByRow(req.query.person, req.query.book);
+    line = "대출 되었습니다.";
+    console.log(line);
+    savexlsx();
+    res.redirect("/");
+});
+
+app.get('/return', (req, res) => {
+    if (findByRow(req.query.person, req.query.book) == null) {
+        line = "대출이 없습니다.";
+        console.log(line);
+        savexlsx();
+        res.redirect("/");
+        return;
+    }
+    deleteByRow(req.query.person, req.query.book);
+    line = "반납 되었습니다.";
+    console.log(line);
+    savexlsx();
+    res.redirect("/");
+});
+
+app.get('/renew', (req, res) => {
+
+    if (findByRow(req.query.person, req.query.book) == null) {
+        line = "대출이 없습니다.";
+        console.log(line);
+        savexlsx();
+        res.redirect("/");
+        return;
+    }
+
+    renewByRow(req.query.person, req.query.book);
+    line = "갱신 되었습니다.";
+    console.log(line);
+    savexlsx();
+    res.redirect("/");
+});
+
+app.get('/save', (req, res) => {
+    console.log(outPath);
+    savexlsx();
+    res.download(outPath, req.query["filename"]);
+});
+
+app.listen(port || 80);
+
+console.log(`listening at ${port}!`);
+console.log(`http://localhost`);
+
+(async() => {
+    await open(`http://localhost`);
+})();
+
+
+function getData() {
+    if (fs.existsSync(outPath)) {
+        return xlsx.readFile(outPath);
+    }
+    return null;
+}
+
+function savexlsx() {
+    xlsx.writeFile(data, outPath, { bookType: "xlsx" });
+}
+
+function removexlsx() {
+    fs.unlinkSync(outPath);
+    data = null;
+}
+
 function findByRow(person, book) {
     const sheets = data.Sheets;
     const result = [];
@@ -98,7 +179,7 @@ function findByRow(person, book) {
     return result;
 };
 
-const appendByRow = (person, book) => {
+function appendByRow(person, book) {
     const sheets = data.Sheets;
     for (const sheetname in sheets) {
         const sheet = sheets[sheetname];
@@ -113,7 +194,7 @@ const appendByRow = (person, book) => {
     };
 }
 
-const renewByRow = (person, book) => {
+function renewByRow(person, book) {
     const sheets = data.Sheets;
     for (const sheetname in sheets) {
         const sheet = sheets[sheetname];
@@ -197,85 +278,5 @@ function deleteByRow(person, book) {
             return true;
         }
         return false;
-    };
-}
-
-app.get('/lend', (req, res) => {
-    console.log(req.query);
-    if (findByRow(req.query.person, req.query.book) != null) {
-        line = "중복되는 대출이 있습니다.";
-        console.log(line);
-        savexlsx();
-        res.redirect("/");
-        return;
     }
-    appendByRow(req.query.person, req.query.book);
-    line = "대출 되었습니다.";
-    console.log(line);
-    savexlsx();
-    res.redirect("/");
-});
-
-app.get('/return', (req, res) => {
-    if (findByRow(req.query.person, req.query.book) == null) {
-        line = "대출이 없습니다.";
-        console.log(line);
-        savexlsx();
-        res.redirect("/");
-        return;
-    }
-    deleteByRow(req.query.person, req.query.book);
-    line = "반납 되었습니다.";
-    console.log(line);
-    savexlsx();
-    res.redirect("/");
-});
-
-app.get('/renew', (req, res) => {
-
-    if (findByRow(req.query.person, req.query.book) == null) {
-        line = "대출이 없습니다.";
-        console.log(line);
-        savexlsx();
-        res.redirect("/");
-        return;
-    }
-
-    renewByRow(req.query.person, req.query.book);
-    line = "갱신 되었습니다.";
-    console.log(line);
-    savexlsx();
-    res.redirect("/");
-});
-
-app.get('/save', (req, res) => {
-    console.log(outPath);
-    savexlsx();
-    res.download(outPath, req.query["filename"]);
-});
-
-app.listen(port || 80);
-
-console.log(`listening at ${port}!`);
-console.log(`http://localhost`);
-
-(async() => {
-    await open(`http://localhost`);
-})();
-
-
-function getData() {
-    if (fs.existsSync(outPath)) {
-        return xlsx.readFile(outPath);
-    }
-    return null;
-}
-
-function savexlsx() {
-    xlsx.writeFile(data, outPath, { bookType: "xlsx" });
-}
-
-function removexlsx() {
-    fs.unlinkSync(outPath);
-    data = null;
 }
